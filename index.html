@@ -3,20 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JS Review - TFJS Vis</title>
+    <title>JS Assignment (No Visor)</title>
 
-    <!-- TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
-
-    <!-- tfjs-vis -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js"></script>
 
-    <!-- Your script -->
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 12px;
+      }
+      .full { grid-column: 1 / -1; }
+      h1 { margin-top: 0; }
+    </style>
+
     <script defer src="script.js"></script>
   </head>
 
   <body>
-    <h2>JS Review (API + TFJS Vis)</h2>
-    <p>Charts will appear in the TFJS Vis panel (visor).</p>
+    <h1>JS Review (API + TFJS Vis) — No Visor</h1>
+    <p>All charts render directly on this page.</p>
+
+    <div class="grid">
+      <div class="card" id="chart-city"></div>
+      <div class="card" id="chart-company"></div>
+      <div class="card" id="chart-hist"></div>
+      <div class="card" id="chart-line"></div>
+
+      <div class="card full" id="table-users"></div>
+    </div>
   </body>
 </html>

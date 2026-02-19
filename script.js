@@ -15,22 +15,20 @@ function countBy(items, getKey) {
 }
 
 async function run() {
-  tfvis.visor().open();
-
   const res = await fetch("https://jsonplaceholder.typicode.com/users");
   if (!res.ok) throw new Error("Failed to fetch users");
   const users = await res.json();
 
-  // 1) Users per City (Bar)
+  // 1) Users per City (Bar) — barchart needs {index, value}
   const cityCounts = countBy(users, (u) => u?.address?.city);
   const cityBar = Object.entries(cityCounts)
     .sort((a, b) => b[1] - a[1])
     .map(([city, count]) => ({ index: city, value: count }));
 
   tfvis.render.barchart(
-    { name: "Users per City (Bar)", tab: "Charts" },
+    document.getElementById("chart-city"),
     cityBar,
-    { xLabel: "City", yLabel: "Users", height: 400 }
+    { xLabel: "City", yLabel: "Users", height: 350 }
   );
 
   // 2) Users per Company (Bar)
@@ -40,37 +38,36 @@ async function run() {
     .map(([company, count]) => ({ index: company, value: count }));
 
   tfvis.render.barchart(
-    { name: "Users per Company (Bar)", tab: "Charts" },
+    document.getElementById("chart-company"),
     companyBar,
-    { xLabel: "Company", yLabel: "Users", height: 450 }
+    { xLabel: "Company", yLabel: "Users", height: 350 }
   );
 
-  // 3) Histogram: length of user names
+  // 3) Histogram: name lengths
   const nameLengths = users
     .map((u) => (u?.name ? u.name.length : NaN))
     .filter((n) => Number.isFinite(n));
 
   tfvis.render.histogram(
-    { name: "Histogram: Name Lengths", tab: "Charts" },
+    document.getElementById("chart-hist"),
     nameLengths,
     { maxBins: 10, height: 350 }
   );
 
-  // 4) Line chart: City counts (sorted) as a simple trend
-  // (Linechart expects {values: [{x,y}...]})
+  // 4) Line chart: city counts (sorted alphabetically) — linechart uses {values:[{x,y}]}
   const cityLineValues = Object.entries(cityCounts)
-    .sort((a, b) => a[0].localeCompare(b[0])) // alphabetical by city
+    .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([city, count]) => ({ x: city, y: count }));
 
   tfvis.render.linechart(
-    { name: "Users per City (Line)", tab: "Charts" },
+    document.getElementById("chart-line"),
     { values: cityLineValues },
-    { xLabel: "City", yLabel: "Users", height: 400 }
+    { xLabel: "City", yLabel: "Users", height: 350 }
   );
 
-  // Optional: show data table (nice extra)
+  // 5) Table of users
   tfvis.render.table(
-    { name: "Users Table", tab: "Data" },
+    document.getElementById("table-users"),
     {
       headers: ["id", "name", "email", "city", "company"],
       values: users.map((u) => [
